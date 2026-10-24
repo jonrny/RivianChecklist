@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rivian R2 Delivery Checklist</title>
+    <!-- Google Fonts: Inter & Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rivian-black: #0B0E11;
+            --rivian-dark: #14191E;
+            --rivian-card: #1C232A;
+            --rivian-card-border: #2B3540;
+            --rivian-yellow: #FFC000;
+            --rivian-compass: #4DA1A9;
+            --rivian-green: #2ECC71;
+            --rivian-orange: #E67E22;
+            --rivian-red: #E74C3C;
+            --rivian-gray: #7F8C8D;
+            --text-main: #F1F5F9;
+            --text-muted: #94A3B8;
+            --text-dim: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--rivian-black);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            padding-bottom: 90px;
+        }
+
+        /* Sticky Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 14, 17, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--rivian-card-border);
+            padding: 16px 20px;
+        }
+
+        .header-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Rivian Compass Icon Logo */
+        .rivian-logo {
+            width: 24px;
+            height: 24px;
+            fill: var(--rivian-yellow);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #FFFFFF;
+        }
+
+        .badge {
+            background: rgba(255, 192, 0, 0.15);
+            color: var(--rivian-yellow);
+            border: 1px solid rgba(255, 192, 0, 0.3);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Overall Progress Bar */
+        .progress-container {
+            max-width: 800px;
+            margin: 16px auto 0 auto;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-track {
+            height: 6px;
+            background-color: var(--rivian-dark);
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid var(--rivian-card-border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--rivian-compass), var(--rivian-yellow));
+            transition: width 0.3s ease;
+        }
+
+        /* Main Layout */
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+
+        /* Controls Section */
+        .controls-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .controls-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            background: var(--rivian-dark);
+            border: 1px solid var(--rivian-card-border);
+            color: var(--text-muted);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--rivian-yellow);
+            color: var(--rivian-black);
+            border-color: var(--rivian-yellow);
+            font-weight: 600;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background-color: var(--rivian-card);
+            border: 1px solid var(--rivian-card-border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 16px 20px;
+            background-color: var(--rivian-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .section-card.expanded .section-header {
+            border-bottom-color: var(--rivian-card-border);
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chevron {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        .section-card.expanded .chevron {
+            transform: rotate(180deg);
+        }
+
+        .items-list {
+            display: none;
+        }
+
+        .section-card.expanded .items-list {
+            display: block;
+        }
+
+        /* Checklist Item Row */
+        .item-row {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 20px;
+            transition: background 0.2s;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-main {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        @media (min-width: 500px) {
+            .item-main {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .item-label {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-main);
+            flex: 1;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        /* Status Select Styling - Updated Colors */
+        .status-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: var(--rivian-dark);
+            color: var(--text-main);
+            border: 1px solid var(--rivian-card-border);
+            padding: 8px 30px 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%20%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: all 0.2s;
+            min-width: 130px;
+        }
+
+        /* Dynamic Options Styling */
+        .status-select option {
+            background-color: var(--rivian-card);
+            color: var(--text-main);
+        }
+
+        /* Pass = Green */
+        .status-select[data-status="Pass"] {
+            border-color: rgba(46, 204, 113, 0.6);
+            color: var(--rivian-green);
+            background-color: rgba(46, 204, 113, 0.15);
+        }
+
+        /* Issue Found = Orange */
+        .status-select[data-status="Issue Found"] {
+            border-color: rgba(230, 126, 34, 0.6);
+            color: var(--rivian-orange);
+            background-color: rgba(230, 126, 34, 0.15);
+        }
+
+        /* Pending = Yellow */
+        .status-select[data-status="Pending"] {
+            border-color: rgba(255, 192, 0, 0.6);
+            color: var(--rivian-yellow);
+            background-color: rgba(255, 192, 0, 0.15);
+        }
+
+        /* N/A & Default = As Is */
+        .status-select[data-status="Select Status"],
+        .status-select[data-status="N/A"] {
+            border-color: var(--rivian-card-border);
+            color: var(--text-muted);
+            background-color: var(--rivian-dark);
+        }
+
+        /* Notes Toggle Button */
+        .notes-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+
+        .notes-btn:hover, .notes-btn.has-notes {
+            color: var(--rivian-yellow);
+        }
+
+        .notes-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Notes Collapsible Area */
+        .notes-container {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px stroke var(--rivian-card-border);
+        }
+
+        .notes-container.open {
+            display: block;
+        }
+
+        .notes-input {
+            width: 100%;
+            background-color: var(--rivian-dark);
+            border: 1px solid var(--rivian-card-border);
+            border-radius: 6px;
+            padding: 10px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.825rem;
+            resize: vertical;
+            min-height: 60px;
+            outline: none;
+        }
+
+        .notes-input:focus {
+            border-color: var(--rivian-yellow);
+        }
+
+        /* Bottom Floating Action Dock */
+        .bottom-dock {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(11, 14, 17, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--rivian-card-border);
+            padding: 12px 20px;
+            z-index: 100;
+        }
+
+        .dock-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--rivian-yellow);
+            color: var(--rivian-black);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: var(--rivian-dark);
+            color: var(--text-main);
+            border: 1px solid var(--rivian-card-border);
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        /* Hidden File Input for Import */
+        #file-input {
+            display: none;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background-color: var(--rivian-yellow);
+            color: var(--rivian-black);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-group">
+                <!-- Rivian Compass Icon -->
+                <svg class="rivian-logo" viewBox="0 0 24 24">
+                    <path d="M12 2L4 12l8 10 8-10L12 2zm0 3.8l5 6.2-5 6.2-5-6.2 5-6.2z"/>
+                </svg>
+                <h1>Rivian R2</h1>
+                <span class="badge">DELIVERY</span>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" id="completion-text">0/0</div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-labels">
+                <span>Progress</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Quick Filters -->
+        <div class="controls-bar">
+            <button class="filter-btn active" onclick="filterItems('all', this)">All Items</button>
+            <button class="filter-btn" onclick="filterItems('Issue Found', this)">Issues</button>
+            <button class="filter-btn" onclick="filterItems('Pending', this)">Pending</button>
+            <button class="filter-btn" onclick="filterItems('Pass', this)">Passed</button>
+            <button class="filter-btn" onclick="filterItems('unanswered', this)">Unchecked</button>
+        </div>
+
+        <!-- Dynamic Checklist Accordions -->
+        <div id="checklist-container"></div>
+    </main>
+
+    <!-- Bottom Action Dock -->
+    <div class="bottom-dock">
+        <div class="dock-container">
+            <button class="btn btn-secondary" onclick="exportJSON()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export JSON
+            </button>
+            <button class="btn btn-secondary" onclick="document.getElementById('file-input').click()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Import
+            </button>
+            <button class="btn btn-primary" onclick="saveToLocalStorage(true)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Save
+            </button>
+        </div>
+    </div>
+
+    <input type="file" id="file-input" accept=".json" onchange="importJSON(event)">
+    <div id="toast" class="toast">Checklist Progress Saved</div>
+
+    <script>
+        // Full Checklist Data parsed from Rivian R2 Sheet
+        const checklistData = [
+            {
+                category: "BEFORE ACCEPTING DELIVERY",
+                items: [
+                    "Confirm the VIN matches your paperwork",
+                    "Make sure you received your key cards and key fob if included",
+                    "Confirm the vehicle transfers into your Rivian app",
+                    "Make sure phone-as-a-key is working"
+                ]
+            },
+            {
+                category: "EXTERIOR",
+                items: [
+                    "Walk around the entire vehicle",
+                    "Check for dents, scratches, chips, or paint damage",
+                    "Check panel alignment and panel gaps",
+                    "Check that trim pieces are properly attached",
+                    "Check PPF edges if installed",
+                    "Inspect the rear loading/tailgate area for damage",
+                    "Look underneath for loose or hanging panels",
+                    "Look underneath for signs of leaks"
+                ]
+            },
+            {
+                category: "WHEELS AND TIRES",
+                items: [
+                    "Inspect all four wheels for scratches for curb damage",
+                    "Make sure all lug nuts are present",
+                    "Check tire condition",
+                    "Check tire pressure",
+                    "Make sure valve stem caps are installed",
+                    "Visually check the brakes"
+                ]
+            },
+            {
+                category: "DOORS, SEALS, AND OPENINGS",
+                items: [
+                    "Open and close every door",
+                    "Test every exterior door handle",
+                    "Check weather stripping",
+                    "Make sure seals are not loose or damaged",
+                    "Open and close the rear hatch",
+                    "Test the lower tailgate",
+                    "Make sure everything operates without binding",
+                    "Open and close the charge port door",
+                    "Check charge port alignment"
+                ]
+            },
+            {
+                category: "FRUNK",
+                items: [
+                    "Open the frunk",
+                    "Make sure the latch works properly",
+                    "Listen for unusual noises",
+                    "Make sure the frunk closes securely",
+                    "Confirm included charger/accessories are present",
+                    "Check the frunk plastics and trim",
+                    "Locate the windshield washer fluid fill",
+                    "Locate the high-voltage emergency information"
+                ]
+            },
+            {
+                category: "CAMERAS AND EXTERIOR LIGHTS",
+                items: [
+                    "Inspect exterior camera lenses for cracks or damage",
+                    "Confirm every camera displays correctly",
+                    "Check front camera",
+                    "Check side cameras",
+                    "Check rear camera",
+                    "Check overhead/360-degree camera view",
+                    "Check headlights",
+                    "Check high beams",
+                    "Check front and rear turn signals",
+                    "Check hazard lights",
+                    "Check tail lights",
+                    "Check brake lights with another person if possible"
+                ]
+            },
+            {
+                category: "INTERIOR",
+                items: [
+                    "Check seats for cuts, scratches, stains, or damage",
+                    "Inspect stitching",
+                    "Inspect dashboard and trim",
+                    "Inspect wood trim",
+                    "Check door panels",
+                    "Make sure door pockets are secure",
+                    "Inspect floor mats",
+                    "Make sure floor mats are installed correctly",
+                    "Check cupholder operation",
+                    "Check interior panels for anything loose",
+                    "Check panoramic glass for cracks or defects",
+                    "Check interior lights"
+                ]
+            },
+            {
+                category: "SEATS, DOORS, AND SAFETY",
+                items: [
+                    "Test the powered front seats",
+                    "Move seats forward and backward",
+                    "Test rear seat folding",
+                    "Check every seat belt",
+                    "Locate the front door emergency manual releases",
+                    "Test all window switches",
+                    "Test the button that drops all windows",
+                    "Raise all windows and verify proper operation"
+                ]
+            },
+            {
+                category: "REAR CARGO AREA",
+                items: [
+                    "Inspect the rear cargo area",
+                    "Check for water or moisture underneath the cargo floor",
+                    "Check storage compartments",
+                    "Confirm the tire inflator is present",
+                    "Confirm spare tire equipment if ordered",
+                    "Test the 12V outlet",
+                    "Test the 120V outlet",
+                    "Check child seat tether locations if needed"
+                ]
+            },
+            {
+                category: "RIVIAN ACCESSORIES",
+                items: [
+                    "Test the Rivian flashlight",
+                    "Make sure it cycles through brightness levels",
+                    "Make sure it docks correctly"
+                ]
+            },
+            {
+                category: "SOFTWARE AND CENTER DISPLAY",
+                items: [
+                    "Go through the Rivian vehicle tour",
+                    "Verify the vehicle software is up to date",
+                    "Check the driver display",
+                    "Familiarize yourself with the center screen",
+                    "Review your vehicle configuration",
+                    "Verify wheels, interior, and configuration are correct",
+                    "Check active upgrades"
+                ]
+            },
+            {
+                category: "AUTONOMY / DRIVER ASSISTANCE",
+                items: [
+                    "Go through the Autonomy tutorial",
+                    "Verify Autonomy Plus if purchased",
+                    "Check lane-change-on-command settings",
+                    "Check speed-related Autonomy settings",
+                    "Check collision warning settings",
+                    "Check emergency braking settings",
+                    "Check lane departure warning"
+                ]
+            },
+            {
+                category: "NAVIGATION AND CHARGING",
+                items: [
+                    "Open navigation",
+                    "Search for charging stations",
+                    "Check charger filtering",
+                    "Hide incompatible chargers if desired",
+                    "Filter stations requiring adapters",
+                    "Check charger ratings/scores",
+                    "Open a station and verify connector types",
+                    "Check nearby food, restrooms, and amenities",
+                    "Know what adapter you need for chargers in your area"
+                ]
+            },
+            {
+                category: "MUSIC AND CONNECTIVITY",
+                items: [
+                    "Set up your preferred music services",
+                    "Sign into Apple Music if used",
+                    "Test Bluetooth",
+                    "Test audio playback",
+                    "Verify Connect+ if subscribed"
+                ]
+            },
+            {
+                category: "KEYS AND DRIVERS",
+                items: [
+                    "Check your listed keys",
+                    "Confirm your phone key",
+                    "Confirm key cards",
+                    "Confirm key fob if included",
+                    "Add additional drivers if needed"
+                ]
+            },
+            {
+                category: "GEAR GUARD",
+                items: [
+                    "Set up Gear Guard",
+                    "Install a compatible USB-C drive or SSD if using external storage",
+                    "Check recorded incidents",
+                    "Check Motion Cam recordings",
+                    "Check Gear Guard Live View from the app"
+                ]
+            },
+            {
+                category: "RESETS",
+                items: [
+                    "Learn how to perform a soft reset",
+                    "Know where the vehicle restart option is in Settings > Maintenance",
+                    "Learn the R2 hard reset procedure",
+                    "Know where to find the reset procedure in the owner's manual/app"
+                ]
+            },
+            {
+                category: "RIVIAN APP",
+                items: [
+                    "Lock the R2 from the app",
+                    "Unlock the R2 from the app",
+                    "Open the rear hatch",
+                    "Close the rear hatch",
+                    "Open the frunk",
+                    "Test the alarm",
+                    "Test remote climate controls",
+                    "Check vehicle location",
+                    "Check estimated remaining miles",
+                    "Check software status",
+                    "Check drivers",
+                    "Check maintenance information",
+                    "Check tire/service information",
+                    "Check Gear Guard Live View"
+                ]
+            },
+            {
+                category: "IF YOU FIND A PROBLEM",
+                items: [
+                    "Try a soft reset if appropriate",
+                    "Check the owner's manual in the Rivian app",
+                    "Use Rivian's diagnostic/service tools",
+                    "Add photos or video of the issue",
+                    "Request a service appointment through the app",
+                    "Describe the issue clearly",
+                    "Select an available appointment"
+                ]
+            }
+        ];
+
+        const STATUS_OPTIONS = ["Select Status", "Pass", "Issue Found", "Pending", "N/A"];
+        let state = {};
+
+        function init() {
+            loadFromLocalStorage();
+            renderChecklist();
+            updateProgress();
+        }
+
+        function getItemId(catIdx, itemIdx) {
+            return `item_${catIdx}_${itemIdx}`;
+        }
+
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = '';
+
+            checklistData.forEach((sec, catIdx) => {
+                const card = document.createElement('div');
+                card.className = 'section-card expanded';
+
+                const header = document.createElement('div');
+                header.className = 'section-header';
+                header.onclick = () => card.classList.toggle('expanded');
+
+                header.innerHTML = `
+                    <div class="section-title">
+                        <span>${sec.category}</span>
+                        <span class="section-count">(${sec.items.length})</span>
+                    </div>
+                    <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+                `;
+
+                const list = document.createElement('div');
+                list.className = 'items-list';
+
+                sec.items.forEach((item, itemIdx) => {
+                    const id = getItemId(catIdx, itemIdx);
+                    const itemState = state[id] || { status: 'Select Status', notes: '' };
+
+                    const row = document.createElement('div');
+                    row.className = 'item-row';
+                    row.dataset.id = id;
+                    row.dataset.status = itemState.status;
+
+                    row.innerHTML = `
+                        <div class="item-main">
+                            <div class="item-label">${item}</div>
+                            <div class="item-actions">
+                                <button class="notes-btn ${itemState.notes ? 'has-notes' : ''}" onclick="toggleNotes('${id}')">
+                                    <svg class="notes-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                                    Notes
+                                </button>
+                                <select class="status-select" data-status="${itemState.status}" onchange="updateStatus('${id}', this.value)">
+                                    ${STATUS_OPTIONS.map(opt => `<option value="${opt}" ${itemState.status === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="notes-container ${itemState.notes ? 'open' : ''}" id="notes_${id}">
+                            <textarea class="notes-input" placeholder="Add specific details or photo references..." oninput="updateNotes('${id}', this.value)">${itemState.notes || ''}</textarea>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+
+                card.appendChild(header);
+                card.appendChild(list);
+                container.appendChild(card);
+            });
+        }
+
+        function updateStatus(id, val) {
+            if (!state[id]) state[id] = { status: 'Select Status', notes: '' };
+            state[id].status = val;
+
+            const row = document.querySelector(`[data-id="${id}"]`);
+            if (row) {
+                row.dataset.status = val;
+                const select = row.querySelector('.status-select');
+                select.dataset.status = val;
+            }
+
+            saveToLocalStorage(false);
+            updateProgress();
+        }
+
+        function updateNotes(id, val) {
+            if (!state[id]) state[id] = { status: 'Select Status', notes: '' };
+            state[id].notes = val;
+
+            const row = document.querySelector(`[data-id="${id}"]`);
+            if (row) {
+                const btn = row.querySelector('.notes-btn');
+                if (val.trim()) {
+                    btn.classList.add('has-notes');
+                } else {
+                    btn.classList.remove('has-notes');
+                }
+            }
+            saveToLocalStorage(false);
+        }
+
+        function toggleNotes(id) {
+            const container = document.getElementById(`notes_${id}`);
+            container.classList.toggle('open');
+        }
+
+        function updateProgress() {
+            let total = 0;
+            let completed = 0;
+
+            checklistData.forEach((sec, cIdx) => {
+                sec.items.forEach((_, iIdx) => {
+                    total++;
+                    const id = getItemId(cIdx, iIdx);
+                    if (state[id] && state[id].status && state[id].status !== 'Select Status') {
+                        completed++;
+                    }
+                });
+            });
+
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('progress-percent').innerText = percent + '%';
+            document.getElementById('completion-text').innerText = `${completed}/${total}`;
+        }
+
+        function filterItems(statusFilter, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const rows = document.querySelectorAll('.item-row');
+            rows.forEach(row => {
+                const currentStatus = row.dataset.status;
+                if (statusFilter === 'all') {
+                    row.style.display = 'block';
+                } else if (statusFilter === 'unanswered') {
+                    row.style.display = (currentStatus === 'Select Status' || !currentStatus) ? 'block' : 'none';
+                } else {
+                    row.style.display = currentStatus === statusFilter ? 'block' : 'none';
+                }
+            });
+        }
+
+        function saveToLocalStorage(showToastAlert = true) {
+            localStorage.setItem('rivian_r2_checklist', JSON.stringify(state));
+            if (showToastAlert) showToast("Progress saved to browser storage");
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('rivian_r2_checklist');
+            if (saved) {
+                try {
+                    state = JSON.parse(saved);
+                } catch(e) {
+                    state = {};
+                }
+            }
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "Rivian_R2_Delivery_Checklist.json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            showToast("JSON Exported successfully");
+        }
+
+        function importJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    state = JSON.parse(e.target.result);
+                    saveToLocalStorage(false);
+                    renderChecklist();
+                    updateProgress();
+                    showToast("JSON Imported successfully");
+                } catch(err) {
+                    alert("Invalid JSON file formatting.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
